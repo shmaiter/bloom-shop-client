@@ -1,5 +1,9 @@
 import { ArrowBackIosOutlined, ArrowForwardIosOutlined } from "@mui/icons-material";
 import styled from "styled-components";
+import summer from "../images/summer2.png";
+import autumn from "../images/autumn1.png";
+import cozy from "../images/whiteCozy.png";
+import { useState } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -7,6 +11,7 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
+  overflow: hidden;
 `;
 
 const Arrow = styled.div`
@@ -29,6 +34,8 @@ const Arrow = styled.div`
 
 const Wrapper = styled.div`
   height: 100%;
+  display: flex;
+  /* transform: translateX(-200vw); */
 `;
 
 const Slide = styled.div`
@@ -36,7 +43,7 @@ const Slide = styled.div`
   height: 100vh;
   display: flex;
   align-items: center;
-  /* border: solid red 1px; */
+  background-color: #${(props) => props.bg};
 `;
 const ImgContainer = styled.div`
   flex: 1;
@@ -55,29 +62,67 @@ const InfoContainer = styled.div`
   padding: 50px;
 `;
 
-const Title = styled.h1``;
-const Desc = styled.p``;
-const Button = styled.button``;
+const Title = styled.h1`
+  font-size: 70px;
+`;
+const Desc = styled.p`
+  margin: 50px 0;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 3px;
+`;
+const Button = styled.button`
+  padding: 10px;
+  font-size: 20px;
+  background-color: transparent;
+  cursor: pointer;
+`;
 
 const Slider = () => {
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  const handleClick = (direction) => {
+    //
+  };
+
   return (
     <Container>
-      <Arrow direction="left">
+      <Arrow direction="left" onClick={() => handleClick("left")}>
         <ArrowBackIosOutlined />
       </Arrow>
       <Wrapper>
-        <Slide>
+        <Slide bg="f5fafd">
           <ImgContainer>
-            <Image src="https://m.media-amazon.com/images/I/71yIaIlUVzL._AC_UY550_.jpg" />
+            <Image src={summer} />
           </ImgContainer>
           <InfoContainer>
             <Title>SUMMER SALE</Title>
             <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</Desc>
-            <Button>SHOW NOW</Button>
+            <Button>SHOW MORE</Button>
+          </InfoContainer>
+        </Slide>
+        <Slide bg="fcd1ed">
+          <ImgContainer>
+            <Image src={autumn} />
+          </ImgContainer>
+          <InfoContainer>
+            <Title>AUTUMN SALE</Title>
+            <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</Desc>
+            <Button>SHOW MORE</Button>
+          </InfoContainer>
+        </Slide>
+        <Slide bg="fbf0f4">
+          <ImgContainer>
+            <Image src={cozy} />
+          </ImgContainer>
+          <InfoContainer>
+            <Title>POPULAR SALE</Title>
+            <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</Desc>
+            <Button>SHOW MORE</Button>
           </InfoContainer>
         </Slide>
       </Wrapper>
-      <Arrow direction="right">
+      <Arrow direction="right" onClick={() => handleClick("right")}>
         <ArrowForwardIosOutlined />
       </Arrow>
     </Container>
