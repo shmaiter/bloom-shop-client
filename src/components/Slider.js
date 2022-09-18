@@ -1,8 +1,6 @@
 import { ArrowBackIosOutlined, ArrowForwardIosOutlined } from "@mui/icons-material";
 import styled from "styled-components";
-import summer from "../images/summer2.png";
-import autumn from "../images/autumn1.png";
-import cozy from "../images/whiteCozy.png";
+import { sliderItems } from "../data";
 import { useState } from "react";
 
 const Container = styled.div`
@@ -30,12 +28,14 @@ const Arrow = styled.div`
   right: ${(props) => props.direction === "right" && "10px"};
   cursor: pointer;
   opacity: 0.5;
+  z-index: 1;
 `;
 
 const Wrapper = styled.div`
   height: 100%;
   display: flex;
-  /* transform: translateX(-200vw); */
+  transition: all 1.5s ease;
+  transform: translateX(${(props) => props.slideIndex * -100}vw);
 `;
 
 const Slide = styled.div`
@@ -82,7 +82,11 @@ const Slider = () => {
   const [slideIndex, setSlideIndex] = useState(0);
 
   const handleClick = (direction) => {
-    //
+    if (direction === "left") {
+      setSlideIndex(slideIndex > 0 ? slideIndex - 1 : 2);
+    } else {
+      setSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0);
+    }
   };
 
   return (
@@ -90,37 +94,19 @@ const Slider = () => {
       <Arrow direction="left" onClick={() => handleClick("left")}>
         <ArrowBackIosOutlined />
       </Arrow>
-      <Wrapper>
-        <Slide bg="f5fafd">
-          <ImgContainer>
-            <Image src={summer} />
-          </ImgContainer>
-          <InfoContainer>
-            <Title>SUMMER SALE</Title>
-            <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</Desc>
-            <Button>SHOW MORE</Button>
-          </InfoContainer>
-        </Slide>
-        <Slide bg="fcd1ed">
-          <ImgContainer>
-            <Image src={autumn} />
-          </ImgContainer>
-          <InfoContainer>
-            <Title>AUTUMN SALE</Title>
-            <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</Desc>
-            <Button>SHOW MORE</Button>
-          </InfoContainer>
-        </Slide>
-        <Slide bg="fbf0f4">
-          <ImgContainer>
-            <Image src={cozy} />
-          </ImgContainer>
-          <InfoContainer>
-            <Title>POPULAR SALE</Title>
-            <Desc>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</Desc>
-            <Button>SHOW MORE</Button>
-          </InfoContainer>
-        </Slide>
+      <Wrapper slideIndex={slideIndex}>
+        {sliderItems.map((item) => (
+          <Slide bg={item.bg} key={item.id}>
+            <ImgContainer>
+              <Image src={item.img} />
+            </ImgContainer>
+            <InfoContainer>
+              <Title>{item.title}</Title>
+              <Desc>{item.desc}</Desc>
+              <Button>SHOW MORE</Button>
+            </InfoContainer>
+          </Slide>
+        ))}
       </Wrapper>
       <Arrow direction="right" onClick={() => handleClick("right")}>
         <ArrowForwardIosOutlined />
