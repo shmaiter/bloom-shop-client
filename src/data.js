@@ -18,7 +18,7 @@ export const sliderItems = [
     img: "/images/confy1.png",
     title: "POPULAR SALE",
     desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-    bg: "fbf0f4",
+    bg: "ADDDD0",
   },
 ];
 

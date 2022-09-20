@@ -21,7 +21,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fcf1ed;
+  background-color: #f5fbfd;
   position: relative;
 
   &:hover ${Info} {
@@ -33,7 +33,7 @@ const Circle = styled.div`
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background-color: #f5fbfd;
+  background-color: white;
   position: absolute;
 `;
 const Image = styled.img`
@@ -54,7 +54,7 @@ const Icon = styled.div`
 
   &:hover {
     transition: all 0.3s ease;
-    background-color: #fcf1ed;
+    background-color: #e9f5f5;
     transform: scale(1.1);
   }
 `;
