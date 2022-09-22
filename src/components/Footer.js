@@ -57,7 +57,7 @@ const ContactItem = styled.div`
 `;
 
 const Payment = styled.img`
-  width: 95%;
+  width: 50%;
   cursor: pointer;
 `;
 
