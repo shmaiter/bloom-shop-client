@@ -2,6 +2,7 @@ import { ArrowBackIosOutlined, ArrowForwardIosOutlined } from "@mui/icons-materi
 import styled from "styled-components";
 import { sliderItems } from "../data";
 import { useState } from "react";
+import { mobile } from "../responsive";
 
 const Container = styled.div`
   width: 100%;
@@ -10,6 +11,7 @@ const Container = styled.div`
   justify-content: space-between;
   position: relative;
   overflow: hidden;
+  ${mobile({ display: "none" })}
 `;
 
 const Arrow = styled.div`

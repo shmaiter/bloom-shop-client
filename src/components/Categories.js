@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { categories } from "../data.js";
 import CategoryItem from "./CategoryItem.js";
-
+import { mobile } from "../responsive";
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
+  ${mobile({ padding: "0px", flexDirection: "column" })}
 `;
 
 const Categories = () => {
