@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Search, ShoppingCartOutlined } from "@mui/icons-material";
 import { Badge } from "@mui/material";
 import { mobile } from "../responsive";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -70,7 +70,7 @@ const MenuItem = styled.div`
 `;
 
 const Navbar = () => {
-    const quantity = useSelector((state) => state.cart.quantity);
+    const numOrders = useSelector((state) => state.cart.numOrders);
     // console.log(quantity);
 
     return (
@@ -84,26 +84,18 @@ const Navbar = () => {
                     </SearchContainer>
                 </Left>
                 <Center>
-                    <Logo>
-                        <NavLink to="/" style={{ textDecoration: "none" }}>
-                            BLOOM
-                        </NavLink>
-                    </Logo>
+                    <Logo>BLOOM</Logo>
                 </Center>
                 <Right>
-                    <MenuItem>
-                        <NavLink to="/register">REGISTER</NavLink>
-                    </MenuItem>
-                    <MenuItem>
-                        <NavLink to="/login">SIGN IN</NavLink>
-                    </MenuItem>
-                    <MenuItem>
-                        <Badge badgeContent={quantity} color="primary">
-                            <NavLink to="/cart">
+                    <MenuItem>REGISTER</MenuItem>
+                    <MenuItem>SIGN IN</MenuItem>
+                    <Link to="/cart">
+                        <MenuItem>
+                            <Badge badgeContent={numOrders} color="primary">
                                 <ShoppingCartOutlined />
-                            </NavLink>
-                        </Badge>
-                    </MenuItem>
+                            </Badge>
+                        </MenuItem>
+                    </Link>
                 </Right>
             </Wrapper>
         </Container>

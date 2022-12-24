@@ -129,6 +129,8 @@ const Product = () => {
             try {
                 const res = await publicRequest("/products/" + id);
                 setProduct(res.data.product);
+                setColor(res.data.product.color[0]);
+                setSize(res.data.product.size[0]);
             } catch (err) {}
         };
         getProduct();
@@ -144,6 +146,7 @@ const Product = () => {
 
     const handleAddToCart = () => {
         // update the cart
+
         dispatch(addProduct({ ...product, quantity, color, size }));
     };
 
