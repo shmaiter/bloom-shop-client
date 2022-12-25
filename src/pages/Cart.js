@@ -5,6 +5,10 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { mobile } from "../responsive";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "../components/CheckoutForm";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -151,77 +155,110 @@ const Button = styled.button`
     font-weight: 600;
 `;
 
+const stripePromise = loadStripe("pk_test_51LphZaF3kGH0WubnimbrbyA0PohGGDY2u3Y8KDeVL58qcMPNP0Upoy35aABhHrISEPt9JHv23Fj9SMi1cHWKRLEZ00zjEEY7VQ");
+
 const Cart = () => {
+    const [clientSecret, setClientSecret] = useState("");
     const cart = useSelector((state) => state.cart);
+
+    const handleCheckout = async () => {
+        await fetch("http://localhost:5000/api/checkout/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: { amount: cart.total } }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("done: ", data);
+                setClientSecret(data.clientSecret);
+            });
+    };
+
+    const appearance = {
+        theme: "stripe",
+    };
+    const options = {
+        clientSecret,
+        appearance,
+    };
+
     return (
-        <Container>
-            <Navbar />
-            <Announcement />
-            <Wrapper>
-                <Title>YOUR BAG</Title>
-                <Top>
-                    <TopButton>CONTINUE SHOPPING</TopButton>
-                    <TopTexts>
-                        <TopText>Shopping Bag(2)</TopText>
-                        <TopText>Your Wishlist (0)</TopText>
-                    </TopTexts>
-                    <TopButton type="filled">CHECKOUT NOW</TopButton>
-                </Top>
-                <Bottom>
-                    <Info>
-                        {cart.products.map((product) => (
-                            <Product key={product._id}>
-                                <ProductDetail>
-                                    <Image src={product.img} />
-                                    <Details>
-                                        <ProductName>
-                                            <b>Product:</b> {product.title}
-                                        </ProductName>
-                                        <ProductId>
-                                            <b>ID:</b> {product._id}
-                                        </ProductId>
-                                        <ProductColor color={product.color} />
-                                        <ProductSize>
-                                            <b>Size:</b> {product.size}
-                                        </ProductSize>
-                                    </Details>
-                                </ProductDetail>
-                                <PriceDetail>
-                                    <ProductAmountContainer>
-                                        <Add />
-                                        <ProductAmount>{product.quantity}</ProductAmount>
-                                        <Remove />
-                                    </ProductAmountContainer>
-                                    <ProductPrice>$ {product.quantity * product.price}</ProductPrice>
-                                </PriceDetail>
-                            </Product>
-                        ))}
-                        <Hr />
-                    </Info>
-                    <Summary>
-                        <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-                        <SummaryItem>
-                            <SummaryItemText>Subtotal</SummaryItemText>
-                            <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem>
-                            <SummaryItemText>Estimated Shipping</SummaryItemText>
-                            <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem>
-                            <SummaryItemText>Shipping Discount</SummaryItemText>
-                            <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem type="total">
-                            <SummaryItemText>Total</SummaryItemText>
-                            <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
-                        </SummaryItem>
-                        <Button>CHECKOUT NOW</Button>
-                    </Summary>
-                </Bottom>
-            </Wrapper>
-            <Footer />
-        </Container>
+        <>
+            {clientSecret ? (
+                <Elements options={options} stripe={stripePromise}>
+                    <CheckoutForm />
+                </Elements>
+            ) : (
+                <Container>
+                    <Navbar />
+                    <Announcement />
+                    <Wrapper>
+                        <Title>YOUR BAG</Title>
+                        <Top>
+                            <TopButton>CONTINUE SHOPPING</TopButton>
+                            <TopTexts>
+                                <TopText>Shopping Bag(2)</TopText>
+                                <TopText>Your Wishlist (0)</TopText>
+                            </TopTexts>
+                            <TopButton type="filled">CHECKOUT NOW</TopButton>
+                        </Top>
+                        <Bottom>
+                            <Info>
+                                {cart.products.map((product) => (
+                                    <Product key={product._id}>
+                                        <ProductDetail>
+                                            <Image src={product.img} />
+                                            <Details>
+                                                <ProductName>
+                                                    <b>Product:</b> {product.title}
+                                                </ProductName>
+                                                <ProductId>
+                                                    <b>ID:</b> {product._id}
+                                                </ProductId>
+                                                <ProductColor color={product.color} />
+                                                <ProductSize>
+                                                    <b>Size:</b> {product.size}
+                                                </ProductSize>
+                                            </Details>
+                                        </ProductDetail>
+                                        <PriceDetail>
+                                            <ProductAmountContainer>
+                                                <Add />
+                                                <ProductAmount>{product.quantity}</ProductAmount>
+                                                <Remove />
+                                            </ProductAmountContainer>
+                                            <ProductPrice>$ {product.quantity * product.price}</ProductPrice>
+                                        </PriceDetail>
+                                    </Product>
+                                ))}
+                                <Hr />
+                            </Info>
+                            <Summary>
+                                <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+                                <SummaryItem>
+                                    <SummaryItemText>Subtotal</SummaryItemText>
+                                    <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
+                                </SummaryItem>
+                                <SummaryItem>
+                                    <SummaryItemText>Estimated Shipping</SummaryItemText>
+                                    <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+                                </SummaryItem>
+                                <SummaryItem>
+                                    <SummaryItemText>Shipping Discount</SummaryItemText>
+                                    <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+                                </SummaryItem>
+                                <SummaryItem type="total">
+                                    <SummaryItemText>Total</SummaryItemText>
+                                    <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
+                                </SummaryItem>
+                                <Button onClick={handleCheckout}>CHECKOUT NOW</Button>
+                            </Summary>
+                        </Bottom>
+                    </Wrapper>
+                    <Footer />
+                </Container>
+            )}
+        </>
     );
 };
 
