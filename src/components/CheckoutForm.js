@@ -1,6 +1,66 @@
+import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
+import { mobile } from "../responsive";
+const Container = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const Wrapper = styled.div`
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+    width: 100vw;
+    ${mobile({ width: "75%" })}
+`;
+
+const Form = styled.form`
+    width: 30vw;
+    min-width: 500px;
+    align-self: center;
+    box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1), 0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
+    border-radius: 7px;
+    padding: 40px;
+`;
+
+const Button = styled.button`
+    margin-top: 15px;
+    background: #5469d4;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+    border-radius: 4px;
+    border: 0;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: block;
+    transition: all 0.2s ease;
+    box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+    width: 100%;
+
+    &:hover {
+        filter: contrast(115%);
+    }
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+`;
+
+const PaymentMessage = styled.div`
+    color: rgb(105, 115, 134);
+    font-size: 16px;
+    line-height: 20px;
+    padding-top: 12px;
+    text-align: center;
+`;
 
 export default function CheckoutForm() {
     const stripe = useStripe();
@@ -73,13 +133,17 @@ export default function CheckoutForm() {
     };
 
     return (
-        <form id="payment-form" onSubmit={handleSubmit}>
-            <PaymentElement id="payment-element" />
-            <button className="btn" disabled={isLoading || !stripe || !elements} id="submit">
-                <span id="button-text">{isLoading ? <div className="spinner" id="spinner"></div> : "Pay now $ " + cart.total}</span>
-            </button>
-            {/* Show any error or success messages */}
-            {message && <div id="payment-message">{message}</div>}
-        </form>
+        <Container>
+            <Wrapper>
+                <Form id="payment-form" onSubmit={handleSubmit}>
+                    <PaymentElement id="payment-element" />
+                    <Button disabled={isLoading || !stripe || !elements} id="submit">
+                        <span id="button-text">{"Pay now $ " + cart.total}</span>
+                    </Button>
+                    {/* Show any error or success messages */}
+                    {message && <PaymentMessage>{message}</PaymentMessage>}
+                </Form>
+            </Wrapper>
+        </Container>
     );
 }

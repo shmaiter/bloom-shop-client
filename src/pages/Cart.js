@@ -169,7 +169,7 @@ const Cart = () => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log("done: ", data);
+                // console.log("done: ", data);
                 setClientSecret(data.clientSecret);
             });
     };
