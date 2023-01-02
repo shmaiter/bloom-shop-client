@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { publicRequest } from "../requestedMethods";
 import { addProduct } from "../redux/cartRedux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -105,24 +105,37 @@ const Button = styled.button`
     padding: 10px;
     border: 2px solid teal;
     background-color: white;
-    cursor: pointer;
     font-weight: 500;
+    cursor: ${(props) => (props.isError ? "not-allowed" : "pointer")};
     &:hover {
-        background-color: teal;
+        background-color: ${(props) => (props.isError ? "white" : "teal")};
         transition: all 0.3s ease;
-        color: white;
+        color: ${(props) => (props.isError ? "black" : "white")};
     }
+`;
+
+const Notification = styled.p`
+    display: ${(props) => (props.isError ? "block" : "none")};
+    /* display: none; */
+    border: 3px solid red;
+    color: red;
+    padding: 10px;
+    margin-top: 20px;
+    font-weight: bold;
 `;
 
 const Product = () => {
     const location = useLocation();
     const id = location.pathname.split("/")[2];
 
+    const [error, setError] = useState(false);
     const [product, setProduct] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState(null);
     const [size, setSize] = useState(null);
     const dispatch = useDispatch();
+
+    const currentUser = useSelector((state) => state.user.currentUser);
 
     useEffect(() => {
         const getProduct = async () => {
@@ -145,9 +158,13 @@ const Product = () => {
     };
 
     const handleAddToCart = () => {
-        // update the cart
-
-        dispatch(addProduct({ ...product, quantity, color, size }));
+        if (currentUser) {
+            // update the cart
+            dispatch(addProduct({ ...product, quantity, color, size }));
+        } else {
+            setError(true);
+            console.log("You need to be loged in to make an order to any product");
+        }
     };
 
     return (
@@ -184,8 +201,11 @@ const Product = () => {
                             <Amount>{quantity}</Amount>
                             <Add onClick={() => handleQuantity("inc")} />
                         </AmountContainer>
-                        <Button onClick={handleAddToCart}>ADD TO CART</Button>
+                        <Button onClick={handleAddToCart} isError={error}>
+                            ADD TO CART
+                        </Button>
                     </AddContainer>
+                    <Notification isError={error}>You need to be loged in to add products to the cart</Notification>
                 </InfoContainer>
             </Wrapper>
             <Newsletter />

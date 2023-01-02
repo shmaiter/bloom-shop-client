@@ -76,7 +76,6 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const { isFetching, error } = useSelector((state) => state.user);
-    let navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleLogin = (e) => {
@@ -84,13 +83,7 @@ const Login = () => {
         login(dispatch, { username, password });
     };
 
-    const user = true;
-
     return (
-        // <>
-        //     {user ? (
-        //         navigate("/")
-        //     ) : (
         <Container>
             <Wrapper>
                 <Title>SIGN IN</Title>
@@ -106,8 +99,6 @@ const Login = () => {
                 </Form>
             </Wrapper>
         </Container>
-        //     )}
-        // </>
     );
 };
 
