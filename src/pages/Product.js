@@ -205,7 +205,7 @@ const Product = () => {
                             ADD TO CART
                         </Button>
                     </AddContainer>
-                    <Notification isError={error}>You need to be loged in to add products to the cart</Notification>
+                    <Notification isError={error}>You need to be logged in to add products to the cart</Notification>
                 </InfoContainer>
             </Wrapper>
             <Newsletter />

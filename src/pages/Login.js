@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { login } from "../redux/apiCalls";
 import { mobile } from "../responsive";
-import { useNavigate } from "react-router-dom";
+import { ArrowBack } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
     width: 100vw;
@@ -12,6 +13,7 @@ const Container = styled.div`
         url("https://images.pexels.com/photos/6984650/pexels-photo-6984650.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940") center;
     background-size: cover;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 `;
@@ -31,6 +33,7 @@ const Title = styled.h1`
 const Form = styled.form`
     display: flex;
     flex-direction: column;
+    line-height: 1.5;
 `;
 
 const Input = styled.input`
@@ -61,15 +64,31 @@ const Button = styled.button`
     }
 `;
 
-const Link = styled.a`
-    margin: 5px 0px;
-    font-size: 12px;
-    text-decoration: underline;
-    cursor: pointer;
-`;
-
 const Error = styled.span`
     color: red;
+`;
+
+const WrapperBack = styled.div`
+    margin-top: 10px;
+    width: 25%;
+    padding: 20px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    ${mobile({ width: "75%" })}
+`;
+
+const ArrowLeft = styled(ArrowBack)`
+    margin-right: 10px;
+`;
+
+const LinkText = styled(Link)`
+    font-size: 15px;
+    color: black;
+
+    &:hover {
+        color: grey;
+    }
 `;
 
 const Login = () => {
@@ -94,10 +113,14 @@ const Login = () => {
                         LOGIN
                     </Button>
                     {error && <Error>Something went wrong...</Error>}
-                    <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-                    <Link>CREATE A NEW ACCOUNT</Link>
+                    <LinkText to="#">Do not remember the password?</LinkText>
+                    <LinkText to="/register">Create a new account</LinkText>
                 </Form>
             </Wrapper>
+            <WrapperBack>
+                <ArrowLeft />
+                <LinkText to="/">Back Home</LinkText>
+            </WrapperBack>
         </Container>
     );
 };
