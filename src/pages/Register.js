@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { ArrowBack } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { json, Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { Info } from "@mui/icons-material";
+import { publicRequest } from "../requestedMethods";
 
 const Container = styled.div`
     width: 100vw;
@@ -163,36 +164,26 @@ const Register = () => {
         const v2 = EMAIL_REGEX.test(email);
         const v3 = PWD_REGEX.test(pwd);
 
-        console.log(v1, v2, v3);
-
         if (!v1 && !v2 && !v3) {
             console.log("Set Error");
-            setErrMsg("Invalid Entry");
             return;
         }
-        console.log("Not error");
+
         const user = {
             username: username,
             email: email,
             password: pwd,
         };
-        console.log(user);
 
         try {
-            const res = await fetch("http://localhost:5000/api/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                withCredentials: true,
-                body: JSON.stringify({ username: username, email: email, password: pwd }),
-            });
-
-            console.log(res.json());
+            await publicRequest.post("/auth/register/", user);
+            // console.log("response:", res.data);
 
             setUsername("");
             setEmail("");
             setPwd("");
             setMatchPwd("");
-            // navigate("/login");
+            navigate("/login");
         } catch (err) {
             if (!err?.response) {
                 setErrMsg("No Server Response");
