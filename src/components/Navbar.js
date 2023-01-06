@@ -88,8 +88,9 @@ const Navbar = () => {
                     <Logo to="/">BLOOM</Logo>
                 </Center>
                 <Right>
-                    <MenuItem to="/register">REGISTER</MenuItem>
                     <MenuItem to="/login">SIGN IN</MenuItem>
+                    {/* Configure another way to logout */}
+                    <MenuItem to="/logout">LOGOUT</MenuItem>
 
                     <MenuItem to="/cart">
                         <Badge badgeContent={numOrders} color="primary">

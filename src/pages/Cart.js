@@ -9,6 +9,7 @@ import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../components/CheckoutForm";
+import { Link } from "react-router-dom";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -28,13 +29,14 @@ const Top = styled.div`
     padding: 20px;
 `;
 
-const TopButton = styled.button`
+const LinkButton = styled(Link)`
+    text-decoration: none;
     padding: 10px;
     font-weight: 600;
     cursor: pointer;
-    border: ${(props) => props.type === "filled" && "none"};
+    border: solid 2px black;
     background-color: ${(props) => (props.type === "filled" ? "black" : "transparent")};
-    color: ${(props) => props.type === "filled" && "white"};
+    color: ${(props) => (props.type === "filled" ? "white" : "black")};
 `;
 
 const TopTexts = styled.div`
@@ -153,6 +155,7 @@ const Button = styled.button`
     background-color: black;
     color: white;
     font-weight: 600;
+    cursor: pointer;
 `;
 
 const stripePromise = loadStripe("pk_test_51LphZaF3kGH0WubnimbrbyA0PohGGDY2u3Y8KDeVL58qcMPNP0Upoy35aABhHrISEPt9JHv23Fj9SMi1cHWKRLEZ00zjEEY7VQ");
@@ -195,12 +198,12 @@ const Cart = () => {
                     <Wrapper>
                         <Title>YOUR BAG</Title>
                         <Top>
-                            <TopButton>CONTINUE SHOPPING</TopButton>
+                            <LinkButton to={"/products"}>CONTINUE SHOPPING</LinkButton>
                             <TopTexts>
                                 <TopText>Shopping Bag(2)</TopText>
                                 <TopText>Your Wishlist (0)</TopText>
                             </TopTexts>
-                            <TopButton type="filled">CHECKOUT NOW</TopButton>
+                            {/* <LinkButton type="filled">CHECKOUT NOW</LinkButton> */}
                         </Top>
                         <Bottom>
                             <Info>

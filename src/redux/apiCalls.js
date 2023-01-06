@@ -9,6 +9,11 @@ export const login = async (dispatch, user) => {
         // console.log(res.data);
         dispatch(logingSuccess(res.data));
     } catch (err) {
-        dispatch(loginFailure());
+        let errorMessage = "";
+        if (!err?.res) {
+            errorMessage = "No Server Response";
+            console.error(err.stack);
+        }
+        dispatch(loginFailure(errorMessage));
     }
 };

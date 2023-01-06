@@ -70,10 +70,9 @@ const Button = styled.button`
     width: 40%;
     border: none;
     padding: 15px 20px;
-    /* background-color: rgba(117, 190, 218, 1); */
     color: white;
     cursor: pointer;
-    background-color: teal;
+    background-color: ${(props) => (props.disabled ? "rgba(30,30,30, 0.2)" : "teal")};
 
     /* &:hover {
         transition: all 0.3s ease;

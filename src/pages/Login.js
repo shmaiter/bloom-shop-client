@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { login } from "../redux/apiCalls";
 import { mobile } from "../responsive";
 import { ArrowBack } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useRef, useEffect } from "react";
 
 const Container = styled.div`
     width: 100vw;
@@ -47,21 +48,11 @@ const Button = styled.button`
     width: 40%;
     border: none;
     padding: 15px 20px;
-    background-color: rgba(117, 190, 218, 1);
     color: white;
     cursor: pointer;
     margin-bottom: 10px;
 
-    &:hover {
-        background-color: teal;
-        transition: all 0.3s ease;
-        color: white;
-    }
-
-    &.disabled {
-        background-color: grey;
-        cursor: not-allowed;
-    }
+    background-color: ${(props) => (props.disabled ? "rgba(30,30,30, 0.2)" : "teal")};
 `;
 
 const Error = styled.span`
@@ -91,31 +82,55 @@ const LinkText = styled(Link)`
     }
 `;
 
+const ErrorMessage = styled.p`
+    display: ${(props) => (props.errMsg ? "block" : "none")};
+    background-color: lightpink;
+    color: firebrick;
+    font-weight: bold;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+`;
+
 const Login = () => {
+    const userRef = useRef();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { isFetching, error } = useSelector((state) => state.user);
+    const { isFetching, error, errorMessage } = useSelector((state) => state.user);
+    // console.log(isFetching, error, errMsg);
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        userRef.current.focus();
+    }, []);
 
     const handleLogin = (e) => {
         e.preventDefault();
         login(dispatch, { username, password });
+
+        // Set different kind of messages according to the server response.
+        if (!error) {
+            setUsername("");
+            setPassword("");
+            // navigate("/");
+        }
     };
 
     return (
         <Container>
             <Wrapper>
+                <ErrorMessage errMsg={error} aria-live="assertive">
+                    {errorMessage || "Something went wrong..."}
+                </ErrorMessage>
                 <Title>SIGN IN</Title>
-                <Form>
-                    <Input placeholder="username" onChange={(e) => setUsername(e.target.value)} />
-                    <Input placeholder="password" type="password" onChange={(e) => setPassword(e.target.value)} />
-                    <Button onClick={handleLogin} disabled={isFetching}>
-                        LOGIN
-                    </Button>
-                    {error && <Error>Something went wrong...</Error>}
-                    <LinkText to="#">Do not remember the password?</LinkText>
-                    <LinkText to="/register">Create a new account</LinkText>
+                <Form onSubmit={handleLogin}>
+                    <Input ref={userRef} required autoComplete="off" placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    <Input required placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <Button disabled={!username || !password || isFetching}>LOGIN</Button>
                 </Form>
+                {/* <LinkText to="#">Do not remember the password?</LinkText> */}
+                <LinkText to="/register">Create a new account</LinkText>
             </Wrapper>
             <WrapperBack>
                 <ArrowLeft />
