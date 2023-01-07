@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { ArrowBack } from "@mui/icons-material";
-import { json, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { Info } from "@mui/icons-material";
@@ -164,7 +164,6 @@ const Register = () => {
         const v3 = PWD_REGEX.test(pwd);
 
         if (!v1 && !v2 && !v3) {
-            console.log("Set Error");
             return;
         }
 
