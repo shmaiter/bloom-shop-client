@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Search, ShoppingCartOutlined } from "@mui/icons-material";
 import { Badge } from "@mui/material";
@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/userRedux";
 import { cleanUserCart } from "../redux/cartRedux";
+import { getOrdersByUser, saveUserCart } from "../redux/apiCalls";
 
 const Container = styled.div`
     height: 60px;
@@ -47,9 +48,10 @@ const Center = styled.div`
 `;
 
 const Logo = styled(Link)`
+    margin-left: 30px;
     text-decoration: none;
     color: teal;
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: bold;
     ${mobile({ fontSize: "24px" })}
 `;
@@ -106,13 +108,35 @@ const ModalButton = styled.button`
     cursor: pointer;
 `;
 
+const UserGreeting = styled.span`
+    text-decoration: none;
+    color: black;
+    font-size: 1rem;
+    margin-left: 25px;
+    cursor: pointer;
+    ${mobile({ fontSize: "12px", marginLeft: "10px" })}
+`;
+
+const Name = styled(UserGreeting)`
+    margin-left: 0;
+    font-weight: bolder;
+    color: teal;
+`;
+
 const Navbar = () => {
     const [modal, setModal] = useState(false);
     const navigate = useNavigate();
 
-    const numOrders = useSelector((state) => state.cart.numOrders);
+    const cart = useSelector((state) => state.cart);
+    const numOrders = cart.numOrders;
     const user = useSelector((state) => state.user?.currentUser);
     const dispatch = useDispatch();
+
+    // useEffect(() => {
+    //     if (user !== null) {
+    //         getOrdersByUser(dispatch, user._id);
+    //     }
+    // }, [dispatch, user]);
 
     const renderModal = () => {
         if (modal) {
@@ -122,6 +146,8 @@ const Navbar = () => {
         }
     };
     const handleLogout = () => {
+        console.log("cart:", cart, "user: ", user);
+        saveUserCart(dispatch, cart, user);
         dispatch(logout());
         dispatch(cleanUserCart());
         navigate("/");
@@ -131,17 +157,16 @@ const Navbar = () => {
         <Container>
             <Wrapper>
                 <Left>
-                    <SearchContainer>
-                        <Input placeholder="Search" />
-                        <Search style={{ color: "gray", fontSize: "16px", marginRight: "5px" }} />
-                    </SearchContainer>
-                </Left>
-                <Center>
                     <Logo to="/">BLOOM</Logo>
-                </Center>
+                </Left>
+                {/* <Center>
+                </Center> */}
                 <Right>
                     {user ? (
                         <>
+                            <UserGreeting>
+                                Welcome back <Name>{user.username.toUpperCase()}</Name>
+                            </UserGreeting>
                             <MenuItem onClick={renderModal}>LOGOUT</MenuItem>
                             <SimpleModal isModal={modal}>
                                 <ModalContent>

@@ -194,7 +194,7 @@ const Cart = () => {
             ) : (
                 <Container>
                     <Navbar />
-                    <Announcement />
+
                     <Wrapper>
                         <Title>YOUR BAG</Title>
                         <Top>

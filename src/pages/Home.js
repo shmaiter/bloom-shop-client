@@ -8,17 +8,17 @@ import Products from "../components/Products";
 import Slider from "../components/Slider";
 
 const Home = () => {
-  return (
-    <>
-      <Navbar />
-      <Announcement />
-      <Slider />
-      <Categories />
-      <Products />
-      <Newsletter />
-      <Footer />
-    </>
-  );
+    return (
+        <>
+            <Navbar />
+            {/* <Announcement /> */}
+            <Slider />
+            <Categories />
+            <Products />
+            <Newsletter />
+            <Footer />
+        </>
+    );
 };
 
 export default Home;

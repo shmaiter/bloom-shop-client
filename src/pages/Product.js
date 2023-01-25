@@ -170,7 +170,7 @@ const Product = () => {
     return (
         <Container>
             <Navbar />
-            <Announcement />
+
             <Wrapper>
                 <ImageContainer>
                     <Image src={product.img} />
@@ -208,7 +208,7 @@ const Product = () => {
                     <Notification isError={error}>You need to be logged in to add products to the cart</Notification>
                 </InfoContainer>
             </Wrapper>
-            <Newsletter />
+
             <Footer />
         </Container>
     );

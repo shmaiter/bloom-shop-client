@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { login } from "../redux/apiCalls";
+import { getOrdersByUser, getUserCart, login } from "../redux/apiCalls";
 import { mobile } from "../responsive";
 import { ArrowBack } from "@mui/icons-material";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef, useEffect } from "react";
+import { publicRequest, userRequest } from "../requestedMethods";
+import { loginFailure, logingSuccess, loginStart } from "../redux/userRedux";
 
 const Container = styled.div`
     width: 100vw;
@@ -55,10 +57,6 @@ const Button = styled.button`
     background-color: ${(props) => (props.disabled ? "rgba(30,30,30, 0.2)" : "teal")};
 `;
 
-const Error = styled.span`
-    color: red;
-`;
-
 const WrapperBack = styled.div`
     margin-top: 10px;
     width: 25%;
@@ -83,7 +81,7 @@ const LinkText = styled(Link)`
 `;
 
 const ErrorMessage = styled.p`
-    display: ${(props) => (props.errMsg ? "block" : "none")};
+    display: ${(props) => (props.isError ? "block" : "none")};
     background-color: lightpink;
     color: firebrick;
     font-weight: bold;
@@ -93,35 +91,57 @@ const ErrorMessage = styled.p`
 
 const Login = () => {
     const userRef = useRef();
+    const errRef = useRef();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const { isFetching, error, errorMessage } = useSelector((state) => state.user);
-    // console.log(isFetching, error, errMsg);
+    const [errMsg, setErrMsg] = useState("");
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const isFetching = useSelector((state) => state.user.isFetching);
 
     useEffect(() => {
         userRef.current.focus();
     }, []);
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        login(dispatch, { username, password });
+    useEffect(() => {
+        setErrMsg("");
+    }, [username, password]);
 
-        // Set different kind of messages according to the server response.
-        if (!error) {
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        dispatch(loginStart());
+
+        try {
+            const res = await publicRequest.post("/auth/login", { username, password });
+            const user = res.data;
+            dispatch(logingSuccess(user));
+            getUserCart(dispatch, user._id, user.accessToken);
             setUsername("");
             setPassword("");
-            // navigate("/");
+            navigate("/");
+        } catch (err) {
+            dispatch(loginStart());
+            if (!err.status) {
+                setErrMsg("No Server Response");
+            } else if (err.status === 400) {
+                setErrMsg("Missing Username or Password");
+            } else if (err.status === 401) {
+                setErrMsg("Unauthorized");
+            } else {
+                setErrMsg(err.data?.message);
+            }
+            errRef.current.focus();
         }
     };
 
     return (
         <Container>
             <Wrapper>
-                <ErrorMessage errMsg={error} aria-live="assertive">
-                    {errorMessage || "Something went wrong..."}
+                <ErrorMessage ref={errRef} isError={errMsg} aria-live="assertive">
+                    {errMsg}
                 </ErrorMessage>
                 <Title>SIGN IN</Title>
                 <Form onSubmit={handleLogin}>

@@ -12,9 +12,25 @@ const cartSlice = createSlice({
         // inside the module that makes the call.
         addProduct: (state, action) => {
             state.numOrders += 1;
+            // console.log(action.payload);
             state.products.push(action.payload);
             state.total += action.payload.price * action.payload.quantity;
         },
+        // GET ALL
+        getProductStart: (state) => {
+            state.isFetching = true;
+            state.error = false;
+        },
+        getProductSuccess: (state, action) => {
+            state.isFetching = false;
+            state.numOrders += action.payload.orders?.length;
+            state.products = action.payload.orders;
+        },
+        getProductFailure: (state) => {
+            state.isFetching = false;
+            state.error = true;
+        },
+        // Clean afte logout
         cleanUserCart: (state) => {
             state.products = [];
             state.numOrders = 0;
@@ -23,5 +39,5 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addProduct, cleanUserCart } = cartSlice.actions;
+export const { addProduct, populateCart, cleanUserCart, getProductStart, getProductSuccess, getProductFailure } = cartSlice.actions;
 export default cartSlice.reducer;
