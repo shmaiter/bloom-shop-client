@@ -52,8 +52,8 @@ const ProductList = () => {
     return (
         <Container>
             <Navbar />
-            <Announcement />
-            <Title>{cat}</Title>
+
+            <Title>{cat.toUpperCase()}</Title>
             <FilterContainer>
                 <Filter>
                     <FilterText>Filter Products</FilterText>
@@ -67,6 +67,8 @@ const ProductList = () => {
                         <Option>black</Option>
                         <Option>yellow</Option>
                         <Option>green</Option>
+                        <Option>brown</Option>
+                        <Option>purple</Option>
                     </Select>
                     <Select name="size" onChange={handleFilters}>
                         <Option defaultValue={"M"} hidden>
@@ -91,7 +93,7 @@ const ProductList = () => {
                 </Filter>
             </FilterContainer>
             <Products cat={cat} filters={filters} sort={sort} />
-            <Newsletter />
+
             <Footer />
         </Container>
     );

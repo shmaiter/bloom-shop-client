@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { sliderItems } from "../data";
 import { useState } from "react";
 import { mobile } from "../responsive";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
     margin-top: 20px;
@@ -74,7 +75,10 @@ const Desc = styled.p`
     font-weight: 500;
     letter-spacing: 3px;
 `;
-const Button = styled.button`
+const Button = styled(Link)`
+    text-decoration: none;
+    border: 1px black solid;
+    color: black;
     padding: 10px;
     font-size: 20px;
     background-color: transparent;
@@ -112,7 +116,7 @@ const Slider = () => {
                         <InfoContainer>
                             <Title>{item.title}</Title>
                             <Desc>{item.desc}</Desc>
-                            <Button>SHOW MORE</Button>
+                            <Button to={`/products/${item.cat}`}>SHOW MORE</Button>
                         </InfoContainer>
                     </Slide>
                 ))}
