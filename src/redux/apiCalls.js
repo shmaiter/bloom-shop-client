@@ -27,7 +27,7 @@ export const login = async (dispatch, user) => {
 };
 
 export const getUserCart = async (dispatch, userId, token) => {
-    const res = await axios.get(`http://localhost:5000/api/carts/${userId}`, { headers: { token: `Bearer ${token}` } });
+    const res = await axios.get(`https://bloom-shop-api.onrender.com/api/carts/${userId}`, { headers: { token: `Bearer ${token}` } });
     console.log(res.data);
     res.data.products?.forEach((product) => {
         dispatch(
@@ -75,7 +75,7 @@ export const saveUserCart = async (dispatch, cart, user) => {
 
 */
 
-    await axios.post("http://localhost:5000/api/carts", userCart, { headers: { token: `Bearer ${token}` } });
+    await axios.post("https://bloom-shop-api.onrender.com/api/carts", userCart, { headers: { token: `Bearer ${token}` } });
     // console.log("responseCart: ", res.data);
 };
 
